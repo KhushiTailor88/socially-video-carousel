@@ -113,6 +113,9 @@ export default function VideoPlayerCard({ video, isCenter, onOpenComments }) {
       const res = await likeVideo(video.id, "demo-user");
       setLikes(res.likes);
       setLiked(res.liked);
+      try {
+        window.dispatchEvent(new CustomEvent("video:like:changed", { detail: res }));
+      } catch (e) {}
     } catch {
       setLiked((prev) => !prev);
       setLikes((prev) => (liked ? prev + 1 : prev - 1));
@@ -124,6 +127,9 @@ export default function VideoPlayerCard({ video, isCenter, onOpenComments }) {
     try {
       const res = await shareVideo(video.id, platform);
       setShares(res.shares);
+      try {
+        window.dispatchEvent(new CustomEvent("video:share:changed", { detail: res }));
+      } catch (e) {}
     } catch {
       /* non-fatal for this demo */
     }

@@ -16,6 +16,9 @@ export default function CommentsPanel({ video, onClose }) {
       const comment = await postComment(video.id, "you", text.trim());
       setComments((prev) => [...prev, comment]);
       setText("");
+      try {
+        window.dispatchEvent(new CustomEvent("video:comment:added", { detail: { videoId: video.id, comment } }));
+      } catch (e) {}
     } catch {
       // keep the draft text so the user can retry
     } finally {

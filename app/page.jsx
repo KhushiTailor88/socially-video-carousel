@@ -20,6 +20,22 @@ export default function Home() {
       .catch(() => setStatus("error"));
   }, []);
 
+  useEffect(() => {
+    function onLike(e) {
+      // refresh videos to reflect updated likes
+      fetchVideos().then((data) => setVideos(data)).catch(() => {});
+    }
+    function onComment(e) {
+      fetchVideos().then((data) => setVideos(data)).catch(() => {});
+    }
+    window.addEventListener("video:like:changed", onLike);
+    window.addEventListener("video:comment:added", onComment);
+    return () => {
+      window.removeEventListener("video:like:changed", onLike);
+      window.removeEventListener("video:comment:added", onComment);
+    };
+  }, []);
+
   return (
     <div className="app">
       <div className="dashboard-shell">
@@ -81,7 +97,19 @@ export default function Home() {
                   <p className="section-kicker">Top picks</p>
                   <h2>Top picks for you this week</h2>
                 </div>
-                <span className="section-pill">See all</span>
+                <button
+                  className="section-pill"
+                  onClick={() => {
+                    try {
+                      const el = document.querySelector('.grid-wrap');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    } catch (e) {
+                      /* noop */
+                    }
+                  }}
+                >
+                  See all
+                </button>
               </div>
               <div className="grid-wrap">
                 {videos.slice(0, 8).map((v) => (
