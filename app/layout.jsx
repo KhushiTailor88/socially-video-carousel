@@ -1,4 +1,5 @@
 import "./globals.css";
+import { PlayIcon } from "../components/icons";
 
 export const metadata = {
   title: "Socially Approved",
@@ -16,7 +17,28 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <div className="app-root">
+          <aside className="sidebar">
+            <div className="sidebar-top">
+              <div className="logo"> <PlayIcon /> </div>
+            </div>
+
+            <nav className="sidebar-nav">
+              <button className="nav-item active">Home</button>
+              <button className="nav-item">Explore</button>
+              <button className="nav-item">Upload</button>
+              <button className="nav-item">Library</button>
+            </nav>
+
+            <div className="sidebar-footer">
+              <button className="sign-in">Sign In</button>
+            </div>
+          </aside>
+
+          <main className="main-content">{children}</main>
+        </div>
+      </body>
     </html>
   );
 }

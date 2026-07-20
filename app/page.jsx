@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import OuterSlider from "../components/OuterSlider";
 import InnerSliderModal from "../components/InnerSliderModal";
 import { fetchVideos } from "../lib/api";
+import GridCard from "../components/GridCard";
 
 export default function Home() {
   const [videos, setVideos] = useState([]);
@@ -62,16 +63,33 @@ export default function Home() {
         {status === "error" && <p className="status-line">Couldn&apos;t load videos. Please refresh.</p>}
 
         {status === "ready" && (
-          <section className="slider-section">
-            <div className="section-heading">
-              <div>
-                <p className="section-kicker">Discover</p>
-                <h2>Trending now</h2>
+          <>
+            <section className="slider-section">
+              <div className="section-heading">
+                <div>
+                  <p className="section-kicker">Discover</p>
+                  <h2>Trending now</h2>
+                </div>
+                <span className="section-pill">Tap to open</span>
               </div>
-              <span className="section-pill">Tap to open</span>
-            </div>
-            <OuterSlider videos={videos} onOpen={setOpenIndex} />
-          </section>
+              <OuterSlider videos={videos} onOpen={setOpenIndex} />
+            </section>
+
+            <section className="featured-grid">
+              <div className="section-heading">
+                <div>
+                  <p className="section-kicker">Top picks</p>
+                  <h2>Top picks for you this week</h2>
+                </div>
+                <span className="section-pill">See all</span>
+              </div>
+              <div className="grid-wrap">
+                {videos.slice(0, 8).map((v) => (
+                  <GridCard key={v.id} video={v} />
+                ))}
+              </div>
+            </section>
+          </>
         )}
       </div>
 
