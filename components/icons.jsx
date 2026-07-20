@@ -12,14 +12,14 @@ export const PauseIcon = (props) => (
   </svg>
 );
 
-export const MuteIcon = (props) => (
+export const UnmuteIcon = (props) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
     <path d="M3 10v4h4l5 5V5L7 10H3z" />
     <path d="M16 8l5 8M21 8l-5 8" stroke="currentColor" strokeWidth="1.6" fill="none" />
-  </svg>
+  </svg> 
 );
 
-export const UnmuteIcon = (props) => (
+export const MuteIcon = (props) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
     <path d="M3 10v4h4l5 5V5L7 10H3z" />
     <path

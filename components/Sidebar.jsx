@@ -18,9 +18,9 @@ export default function Sidebar() {
         <button className="nav-item">Library</button>
       </nav>
 
-      <div className="sidebar-footer">
+      {/* <div className="sidebar-footer">
         <button className="sign-in">Sign In</button>
-      </div>
+      </div> */}
     </aside>
   );
 }

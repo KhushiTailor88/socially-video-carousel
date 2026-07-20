@@ -12,7 +12,7 @@ import {
   ShareIcon,
 } from "./icons";
 
-const SHARE_PLATFORMS = ["Copy link", "WhatsApp", "Instagram", "X"];
+const SHARE_PLATFORMS = ["Copy link", "WhatsApp", "Instagram", "Twitter"];
 
 export default function VideoPlayerCard({ video, isCenter, onOpenComments }) {
   const videoRef = useRef(null);
@@ -124,26 +124,53 @@ export default function VideoPlayerCard({ video, isCenter, onOpenComments }) {
 
   async function handleShare(platform) {
     setShareOpen(false);
+    const link = `${window.location.origin}/video/${video.id}`;
+
+    // Perform platform-specific sharing action first so the user sees immediate feedback.
+    try {
+      if (platform === "Copy link") {
+        try {
+          await navigator.clipboard.writeText(link);
+          setToast("Link copied");
+        } catch {
+          setToast(link);
+        }
+      } else if (platform === "WhatsApp") {
+        window.open(`https://wa.me/?text=${encodeURIComponent(link)}`, "_blank");
+        setToast("WhatsApp share opened");
+      } else if (platform === "Twitter") {
+        window.open(
+          `https://twitter.com/intent/tweet?url=${encodeURIComponent(link)}&text=${encodeURIComponent(
+            video.title || ""
+          )}`,
+          "_blank"
+        );
+        setToast("Twitter share opened");
+      } else if (platform === "Instagram") {
+        // Instagram web doesn't support direct URL sharing; open Instagram and let user paste.
+        window.open("https://www.instagram.com/", "_blank");
+        setToast("Open Instagram and paste link");
+      } else {
+        window.open(link, "_blank");
+        setToast(`Shared to ${platform}`);
+      }
+    } catch (e) {
+      // Non-fatal; still try to record share on the server.
+    }
+
+    // Record the share on the server and update UI counts.
     try {
       const res = await shareVideo(video.id, platform);
-      setShares(res.shares);
+      if (res && typeof res.shares === "number") {
+        setShares(res.shares);
+      }
       try {
         window.dispatchEvent(new CustomEvent("video:share:changed", { detail: res }));
       } catch (e) {}
-    } catch {
-      /* non-fatal for this demo */
+    } catch (err) {
+      // ignore recording errors for the demo
     }
-    if (platform === "Copy link") {
-      const link = `${window.location.origin}/video/${video.id}`;
-      try {
-        await navigator.clipboard.writeText(link);
-        setToast("Link copied");
-      } catch {
-        setToast(link);
-      }
-    } else {
-      setToast(`Shared to ${platform}`);
-    }
+
     setTimeout(() => setToast(""), 1800);
   }
 
